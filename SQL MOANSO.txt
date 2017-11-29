@@ -1,0 +1,339 @@
+CREATE DATABASE MEDICANA
+GO
+USE MEDICANA
+
+
+CREATE TABLE DUENHO(
+ID_DUENHO int identity(101,1) primary key,
+NOMBRE_DUENHO varchar (50),
+APELLIDO_PAT_DUENHO varchar (20),
+APELLIDO_MAT_DUENHO varchar(20),
+DIRECCION varchar(100),
+CELULAR int
+)
+
+CREATE TABLE MASCOTA(
+ID_MASCOTA int identity(1,1) primary key,
+ID_DUENHO int REFERENCES DUENHO,
+NOMBRE_MASCOTA varchar (50),
+RAZA varchar (30),
+COLOR_PELAJE varchar(30),
+PESO float,
+FECHA_NACIMIENTO varchar(30)
+)
+
+CREATE TABLE ATENCION(
+ID_ATENCION int identity(1001,1) primary key,
+NOMBRE_ATENCIOMN varchar(60),
+PRECIO_ATENCION float
+)
+
+CREATE TABLE VENTA_ATENCION(
+ID_VENTA_ATENCION int identity(1,1) primary key,
+ID_MASCOTA int REFERENCES MASCOTA,
+ID_DUENHO int REFERENCES DUENHO,
+ID_ATENCION int REFERENCES ATENCION,
+FECHA_VENTA_ATENCION varchar(20),
+PRECIO_TOTAL_VENTA_ATENCION float
+)
+
+CREATE TABLE MARCA_PRODUCTO(
+ID_MARCA_PRODUCTO int identity(501,1) primary key,
+NOMBRE_MARCA_PRODUCTO varchar(100)
+)
+
+CREATE TABLE PRODUCTO(
+ID_PRODUCT int identity (10001,1) primary key,
+NOMBRE_PRODUCTO varchar(100),
+ID_MARCA_PRODUCTO int REFERENCES MARCA_PRODUCTO,
+CANTIDAD_PRODUCTO int,
+PRECIO_PRODUCTO float,
+UNIDAD_MEDIDA_PRODUCTO varchar (20)
+)
+
+CREATE TABLE VENTA_PRODUCTO(
+ID_VENTA_PRODUCTO int identity(1,1) primary key,
+ID_PRODUCTO int REFERENCES PRODUCTO,
+NOMBRE_CLIENTE varchar(50),
+APELLIDO_CLIENTE varchar(50),
+FECHA_VENTA_PRODUCTO varchar(20),
+PRECIO_TOTAL_VENTA_PRODUCTO float
+)
+
+CREATE TABLE DATOS_ATENCIONES(
+NOMBRE_A varchar(40),
+PRECIO_A float
+)
+
+CREATE TABLE DATOS_PRODUCTOS(
+NOMBRE_P varchar(40),
+CANTIDAD_P int,
+PRECIO_P float
+)
+
+-----------------------------------------------------------------------------------------------------------------------------
+----MODIFICAR
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure ModificarProducto(
+@ID_PRODUCTO int,
+@CANTIDAD_PRODUCTO int,
+@PRECIO_PRODUCTO float
+)
+as begin
+update PRODUCTO SET CANTIDAD_PRODUCTO=@CANTIDAD_PRODUCTO, PRECIO_PRODUCTO=@PRECIO_PRODUCTO
+where ID_PRODUCT=@ID_PRODUCTO
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure ModificarDuenho(
+@ID_DUENHO int,
+@CELULAR int,
+@DIRECCION varchar(50)
+)
+as begin
+update DUENHO SET CELULAR=@CELULAR, DIRECCION=@DIRECCION
+where ID_DUENHO=@ID_DUENHO
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure ModificarAtencion(
+@ID_ATENCION int,
+@PRECIO_ATENCION float
+)
+as begin
+update ATENCION SET PRECIO_ATENCION=@PRECIO_ATENCION
+where ID_ATENCION=@ID_ATENCION
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure ModificarMascota(
+@ID_MASCOTA int,
+@PESO float
+)
+as begin
+update MASCOTA SET PESO=@PESO
+where ID_MASCOTA=@ID_MASCOTA
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+---INSETAR
+-----------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE InsertarProducto(
+@NOMBRE_PRODUCTO varchar(100),
+@ID_MARCA_PRODUCTO int,
+@CANTIDAD_PRODUCTO int,
+@PRECIO_PRODUCTO float,
+@UNIDAD_MEDIDA_PRODUCTO varchar(20))
+as
+begin
+insert into PRODUCTO values(@NOMBRE_PRODUCTO,@ID_MARCA_PRODUCTO,@CANTIDAD_PRODUCTO,@PRECIO_PRODUCTO,@UNIDAD_MEDIDA_PRODUCTO)
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE InsertarMarca(
+@NOMBRE_MARCA_PRODUCTO varchar(100))
+as
+begin
+insert into MARCA_PRODUCTO values(@NOMBRE_MARCA_PRODUCTO)
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE InsertarAtencion(
+@NOMBRE_ATENCION varchar(50),
+@PRECIO_ATENCION float)
+as
+begin
+insert into ATENCION values(@NOMBRE_ATENCION,@PRECIO_ATENCION)
+end
+go
+----------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE InsertarMascota(
+@NOMBRE_MASCOTA varchar(50),
+@RAZA varchar(50),
+@COLOR_PELAJE varchar(30),
+@PESO float,
+@FECHA_NACIMIENTO varchar(30),
+@ID_DUENHO int
+)
+as
+begin
+insert into MASCOTA values(@NOMBRE_MASCOTA,@RAZA,@COLOR_PELAJE,@PESO,@FECHA_NACIMIENTO,@ID_DUENHO)
+end
+go
+----------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE InsertarDuenho(
+@NOMBRE_DUENHO varchar(50),
+@APELLIDO_PAT_DUENHO varchar(50),
+@APELLIDO_MAT_DUENHO varchar(30),
+@DIRECCION varchar(30),
+@CELULAR int
+)
+as
+begin
+insert into DUENHO values(@NOMBRE_DUENHO,@APELLIDO_PAT_DUENHO,@APELLIDO_MAT_DUENHO,@DIRECCION,@CELULAR)
+end
+go
+----------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE InsertarDatosA(
+@NOMBRE_A varchar(40),
+@PRECIO_A float
+)
+as begin
+insert into DATOS_ATENCIONES values (@NOMBRE_A,@PRECIO_A)
+end 
+go
+----------------------------------------------------------------------------------------------------------------------------
+CREATE PROCEDURE InsertarDatosP(
+@NOMBRE_P varchar(40),
+@CANTIDAD_P int,
+@PRECIO_P float
+)
+as begin
+insert into DATOS_PRODUCTOS values (@NOMBRE_P,@CANTIDAD_P,@PRECIO_P)
+end 
+go
+----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
+-----ELIMINAR
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure EliminarMascota(
+@ID_MASCOTA int) 
+as
+begin
+delete MASCOTA
+where ID_MASCOTA=@ID_MASCOTA
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure EliminarDuenho(
+@ID_DUENHO int) 
+as
+begin
+delete DUENHO
+where ID_DUENHO=@ID_DUENHO
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure EliminarMarca(
+@ID_MARCA_PRODUCTO int) 
+as
+begin
+delete MARCA_PRODUCTO
+where ID_MARCA_PRODUCTO=@ID_MARCA_PRODUCTO
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure EliminarProducto(
+@ID_PRODUCTO int) 
+as
+begin
+delete PRODUCTO
+where ID_PRODUCT=@ID_PRODUCTO
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure EliminarAtencion(
+@ID_ATENCION int) 
+as
+begin
+delete ATENCION
+where ID_ATENCION=@ID_ATENCION
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+-----LISTAR
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure ListaProducto
+as
+begin
+select * from PRODUCTO
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure ListaMascota
+as
+begin
+select M.ID_MASCOTA, M.NOMBRE_MASCOTA, M.RAZA, M.PESO, M.FECHA_NACIMIENTO, D.NOMBRE_DUENHO from MASCOTA  M
+INNER JOIN  DUENHO  D
+ON M.ID_DUENHO=D.ID_DUENHO
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure ListaDuenho
+as
+begin
+select * from DUENHO
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure ListaMarca
+as
+begin
+select * from MARCA_PRODUCTO
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure ListaAtencion
+as
+begin
+select * from ATENCION
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure ListaTVA
+as
+begin
+select * from DATOS_ATENCIONES
+end
+go
+
+create procedure ListaTVP
+as
+begin
+select * from DATOS_PRODUCTOS
+end
+go
+
+-----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure EliminarDatosA
+as
+begin
+TRUNCATE TABLE DATOS_ATENCIONES
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure EliminarDatosP
+as
+begin
+TRUNCATE TABLE DATOS_PRODUCTOS
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure SUMA_AT
+as
+begin
+SELECT SUM(PRECIO_A*1.18) FROM DATOS_ATENCIONES
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
+create procedure SUMA_PR
+as
+begin
+SELECT SUM(PRECIO_P*1.18*CANTIDAD_P) FROM DATOS_PRODUCTOS
+end
+go
+-----------------------------------------------------------------------------------------------------------------------------
+-----------------------------------------------------------------------------------------------------------------------------
+
+
+
+SELECT * FROM ATENCION
+
+
+
+
+
+SELECT SUM(PRECIO_PRODUCTO*1.18) FROM PRODUCTO
