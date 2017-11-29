@@ -1,0 +1,46 @@
+CREATE DATABASE MEDICANS
+GO
+
+USE MEDICANS
+
+CREATE TABLE Mascota(
+IdMascota int identity(1001,1) primary key,
+IdDuenho int REFERENCES DuenhoMascota,
+NombreMascota varchar (50),
+Raza varchar (50),
+Peso float,
+FechaNacimiento date,
+ColorPelaje varchar(50),
+)
+
+CREATE TABLE DuenhoMascota(
+IdDuenho int identity(101,1) primary key,
+NombreDuenho varchar (50),
+ApellidoPat varchar (50),
+ApellidoMat varchar (50),
+Celular int,
+Direccion varchar (100)
+)
+
+CREATE TABLE Producto(
+IdProducto int identity(10001,1) primary key,
+NombreProducto varchar (50),
+ID_MARCA_PRODUCTO int REFERENCES MARCA_PRODUCTO ,
+Marca varchar (50),
+Cantidad int,
+Precio float,
+UnidadMedida varchar (50)
+)
+CREATE TABLE MARCA_PRODUCTO(
+ID_MARCA_PRODUCTO int identity(501,1) primary key,
+NOMBRE_MARCA_PRODUCTO varchar(100)
+)
+
+CREATE TABLE Ventas(
+IdVenta int identity(2001,1) primary key,
+IdProducto int REFERENCES producto ,
+NombreCliente varchar (50),
+ApellidoCliente varchar (50),
+FechaVen date,
+PrecioTotal int,
+)
